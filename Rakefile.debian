@@ -1,0 +1,31 @@
+require 'rake'
+
+PROJECT = 'gtk-webkit-ruby'
+PROJECT_VERSION = '0.0.4'
+
+task :default => :deb 
+
+task :dist, :destdir do |t,args|
+  destdir = (args[:destdir] || '/tmp')
+  pwd = Dir.pwd
+  Dir.chdir '../'
+  system "tar --exclude #{PROJECT}/exclude --exclude " + \
+         "#{PROJECT}/debian " + \
+         "-czf #{destdir}/#{PROJECT}_#{PROJECT_VERSION}.orig.tar.gz " + \
+         "#{PROJECT}"
+  Dir.chdir pwd
+end
+
+task :deb, :destdir do |t, args|
+  destdir = (args[:destdir] || '/tmp')
+  pwd = Dir.pwd
+  Dir.chdir '../'
+  system "tar --exclude #{PROJECT}/exclude --exclude " + \
+         "#{PROJECT}/debian " + \
+         "-czf #{destdir}/#{PROJECT}_#{PROJECT_VERSION}.orig.tar.gz " + \
+         "#{PROJECT}"
+  Dir.chdir "#{destdir}"
+  system "tar xzf #{PROJECT}_#{PROJECT_VERSION}.orig.tar.gz"
+  Dir.chdir pwd
+  system "cp -r debian #{destdir}/#{PROJECT}/"
+end
